@@ -14,6 +14,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+
+    <!-- SonarQube (token comes from the SONAR_TOKEN environment variable) -->
+    <sonar.host.url>http://localhost:9000</sonar.host.url>
+    <sonar.projectKey>dependabot-lab</sonar.projectKey>
+    <sonar.projectName>dependabot-lab</sonar.projectName>
   </properties>
 
   <dependencyManagement>
@@ -49,8 +54,37 @@
   </dependencies>
 
   <build>
+    <plugins>
+      <!-- Code coverage for SonarQube: report is written to target/site/jacoco/jacoco.xml -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.16</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>5.8.0.7211</version>
+        </plugin>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
